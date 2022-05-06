@@ -23,6 +23,7 @@ class AccountEventProducer(
         rabbitTemplate.convertAndSend(
             topicExchange,
             "",
-            message)
+            message
+        )
     }
 }

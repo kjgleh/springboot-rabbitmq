@@ -1,10 +1,11 @@
 package me.kjgleh.springboot.rabbitmq.account
 
 import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.core.BindingBuilder
+import org.springframework.amqp.core.FanoutExchange
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
+import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.amqp.support.converter.MessageConverter
@@ -25,19 +26,19 @@ class RabbitMqConfig {
     }
 
     @Bean
-    fun exchange(): TopicExchange {
-        return TopicExchange(topicExchangeName)
+    fun exchange(): FanoutExchange {
+        return FanoutExchange(topicExchangeName)
     }
 
     @Bean
-    fun binding(queue: Queue, exchange: TopicExchange): Binding {
-        return BindingBuilder.bind(queue).to(exchange).with("")
+    fun binding(queue: Queue, exchange: FanoutExchange): Binding {
+        return BindingBuilder.bind(queue).to(exchange)
     }
 
     @Bean
     fun rabbitTemplate(
         connectionFactory: ConnectionFactory,
-        messageConverter: MessageConverter
+        messageConverter: MessageConverter,
     ): RabbitTemplate {
         val rabbitTemplate = RabbitTemplate(connectionFactory)
         rabbitTemplate.messageConverter = messageConverter
